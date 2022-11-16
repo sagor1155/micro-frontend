@@ -3,7 +3,7 @@ const { shareAll, withModuleFederationPlugin } = require('@angular-architects/mo
 module.exports = withModuleFederationPlugin({
 
   name: 'products',
-
+  filename: 'products.js',
   exposes: {
     './DashboardModule': './projects/products/src/app/dashboard/dashboard.module.ts',
   },
