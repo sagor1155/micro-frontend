@@ -6,6 +6,8 @@ module.exports = withModuleFederationPlugin({
   filename: 'products.js',
   exposes: {
     './DashboardModule': './projects/products/src/app/dashboard/dashboard.module.ts',
+    './CatalogModule': './projects/products/src/app/catalog/catalog.module.ts',
+    './CatalogComponent': './projects/products/src/app/catalog/catalog/catalog.component.ts'
   },
 
   shared: {
