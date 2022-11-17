@@ -27,7 +27,8 @@
 							"projects/shell/src/assets"
 						],
 						"styles": [
-							"projects/shell/src/styles.css"
+							"projects/shell/src/styles.css",
+              "./node_modules/bootstrap/dist/css/bootstrap.min.css"
 						],
 						"scripts": [],
 						"extraWebpackConfig": "projects/shell/webpack.config.js",
@@ -135,7 +136,8 @@
 							"projects/products/src/assets"
 						],
 						"styles": [
-							"projects/products/src/styles.css"
+							"projects/products/src/styles.css",
+              "./node_modules/bootstrap/dist/css/bootstrap.min.css"
 						],
 						"scripts": [],
 						"extraWebpackConfig": "projects/products/webpack.config.js",

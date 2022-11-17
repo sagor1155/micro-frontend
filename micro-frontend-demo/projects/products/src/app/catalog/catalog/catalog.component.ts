@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-catalog',
@@ -10,6 +10,17 @@ export class CatalogComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  onButtonClick() {
+    const busEvent = new CustomEvent('app-event-bus', {
+      bubbles: true,
+      detail: {
+        eventType: 'catalog-event',
+        customData: 'some data here'
+      }
+    });
+    dispatchEvent(busEvent);
   }
 
 }

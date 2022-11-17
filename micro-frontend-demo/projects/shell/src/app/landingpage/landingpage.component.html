@@ -1,7 +1,9 @@
 <p>Welcome to Micro-Frontend!</p>
-
-<div>
-  <button (click)="load()">Load!</button>
-</div>
-
 <div #placeHolder></div>
+
+<ng-template
+  mfeOutlet="products"
+  mfeOutletModule="CatalogModule"
+  mfeOutletComponent="CatalogComponent"
+>
+</ng-template>

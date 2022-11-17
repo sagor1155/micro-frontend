@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { MfeRegistry } from 'ngx-mfe';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,8 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'shell';
+
+  constructor(public mfeRegistry: MfeRegistry) {
+    console.log('Mfe Registry: ', mfeRegistry);
+  }
 }
