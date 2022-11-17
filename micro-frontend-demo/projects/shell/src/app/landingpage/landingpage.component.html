@@ -1,9 +1,46 @@
 <p>Welcome to Micro-Frontend!</p>
-<div #placeHolder></div>
 
-<ng-template
-  mfeOutlet="products"
-  mfeOutletModule="CatalogModule"
-  mfeOutletComponent="CatalogComponent"
->
+<div class="container">
+<div>
+  <div class="mb-2">
+    <ng-container
+      mfeOutlet="products"
+      mfeOutletModule="CatalogModule"
+      mfeOutletComponent="CatalogComponent"
+      [mfeOutletInputs]="{ text: text }"
+      [mfeOutletOutputs]="{ click: onClick }"
+    >
+    </ng-container>  
+  </div>
+  <div class="mb-2">
+    <ng-container
+      mfeOutlet="products"
+      mfeOutletModule="DashboardModule"
+      mfeOutletComponent="DashboardTableComponent"
+      [mfeOutletInputs]="{ text: text }"
+    >
+    </ng-container>
+  </div>
+</div>
+</div>
+
+<!-- <ng-container
+  *mfeOutlet="
+    'products';
+    module: 'CatalogModule';
+    component: 'CatalogComponent';
+    loaderDelay: 1500;
+    loader: loaderTpl;
+    fallback: fallbackTpl;
+    inputs: { text: text };
+    outputs: { click: onClick };
+  "
+></ng-container>
+
+<ng-template #loaderTpl>
+  <div>loading...</div>
 </ng-template>
+
+<ng-template #fallbackTpl>
+  <div>Ooops! Something went wrong</div>
+</ng-template> -->

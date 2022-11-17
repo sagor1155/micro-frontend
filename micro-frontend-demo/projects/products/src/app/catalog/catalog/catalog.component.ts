@@ -7,20 +7,16 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 })
 export class CatalogComponent implements OnInit {
 
+  @Input() text = '';
+  @Output() click: EventEmitter<void> = new EventEmitter();
+
   constructor() { }
 
   ngOnInit(): void {
   }
 
   onButtonClick() {
-    const busEvent = new CustomEvent('app-event-bus', {
-      bubbles: true,
-      detail: {
-        eventType: 'catalog-event',
-        customData: 'some data here'
-      }
-    });
-    dispatchEvent(busEvent);
+    this.click.emit();
   }
 
 }

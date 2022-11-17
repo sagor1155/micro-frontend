@@ -9,20 +9,12 @@ const routes: Routes = [
     component: LandingpageComponent,
     pathMatch: 'full'
   },
-  // {
-  //   path: 'dashboard',
-  //   loadChildren: () => import('products/DashboardModule').then(m => m.DashboardModule)
-  // },
-  // {
-  //   path: 'catalog',
-  //   loadChildren: () => import('products/CatalogModule').then(m => m.CatalogModule)
-  // },
   {
     path: 'dashboard',
     loadChildren: () => loadRemoteModule({
       type: 'module',
       remoteEntry: 'http://localhost:3000/products.js',
-      exposedModule: './DashboardModule'
+      exposedModule: 'DashboardModule'
     }).then(m => m.DashboardModule)
   },
   {
@@ -30,16 +22,8 @@ const routes: Routes = [
     loadChildren: () => loadRemoteModule({
       type: 'module',
       remoteEntry: 'http://localhost:3000/products.js',
-      exposedModule: './CatalogModule'
+      exposedModule: 'CatalogModule'
     }).then(m => m.CatalogModule)
-  },
-  {
-    path: 'catalog-comp',
-    loadChildren: () => loadRemoteModule({
-      type: 'module',
-      remoteEntry: 'http://localhost:3000/products.js',
-      exposedModule: './CatalogComponent'
-    }).then(m => m.CatalogComponent)
   },
   {
     path: '**',

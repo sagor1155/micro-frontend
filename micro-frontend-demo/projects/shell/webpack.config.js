@@ -2,10 +2,6 @@ const { share, shareAll, withModuleFederationPlugin, SharedMappings } = require(
 
 module.exports = withModuleFederationPlugin({
 
-  // remotes: {
-  //   products: "http://localhost:3000/products.js",
-  // },
-
   shared: {
     ...shareAll({ singleton: true, strictVersion: true, requiredVersion: 'auto' }),
   },
