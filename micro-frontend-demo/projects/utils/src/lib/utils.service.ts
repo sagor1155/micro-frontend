@@ -1,21 +1,21 @@
 import { Injectable } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UtilsService {
 
-  private counter = 0;
+  private testObs: Subject<boolean> = new Subject();
 
-  constructor() {
-    console.log('UtisService Constructor Call!');
+  constructor() { }
+
+  getTestEvent(): Observable<boolean> {
+    return this.testObs.asObservable();
   }
 
-  get value(): number {
-    return this.counter;
+  publistTestEvent(data: boolean) {
+    this.testObs.next(data);
   }
 
-  set value(val: number) {
-    this.counter = val;
-  }
 }

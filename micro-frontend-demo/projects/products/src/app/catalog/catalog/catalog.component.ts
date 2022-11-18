@@ -18,8 +18,8 @@ export class CatalogComponent implements OnInit {
   }
 
   onButtonClick() {
-    console.log('MFE: Counter is: ', this.utilsSvc.value);
     // this.click.emit();
+    this.utilsSvc.publistTestEvent(true);
   }
 
 }
