@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { MfeModule } from 'ngx-mfe';
+import { UtilsModule } from 'projects/utils/src/public-api';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -16,7 +17,8 @@ import { DashboardModule } from './dashboard/dashboard.module';
     AppRoutingModule,
     MfeModule,
     CatalogModule,
-    DashboardModule
+    DashboardModule,
+    UtilsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

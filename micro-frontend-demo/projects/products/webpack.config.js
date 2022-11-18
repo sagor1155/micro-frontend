@@ -1,4 +1,4 @@
-const { shareAll, withModuleFederationPlugin } = require('@angular-architects/module-federation/webpack');
+const { withModuleFederationPlugin, share } = require('@angular-architects/module-federation/webpack');
 
 module.exports = withModuleFederationPlugin({
 
@@ -11,8 +11,16 @@ module.exports = withModuleFederationPlugin({
     CatalogComponent: './projects/products/src/app/catalog/catalog/catalog.component.ts'
   },
 
-  shared: {
-    ...shareAll({ singleton: true, strictVersion: true, requiredVersion: 'auto' }),
-  },
+  shared: share({
+    '@angular/animations': {singleton: true, strictVersion: true},
+    '@angular/core': {singleton: true, strictVersion: true},
+    '@angular/common': {singleton: true, strictVersion: true},
+    '@angular/forms': {singleton: true, strictVersion: true},
+    '@angular/platform-browser': {singleton: true, strictVersion: true},
+    '@angular/router': {singleton: true, strictVersion: true},
+    rxjs: {singleton: true, strictVersion: true},
+    "ngx-mfe": { singleton: true, strictVersion: true},
+    "projects/utils/src/public-api": { singleton: true, strictVersion: true, requiredVersion: "0.0.1"}
+  })
 
 });

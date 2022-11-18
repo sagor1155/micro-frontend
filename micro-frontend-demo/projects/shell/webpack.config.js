@@ -2,8 +2,16 @@ const { share, shareAll, withModuleFederationPlugin, SharedMappings } = require(
 
 module.exports = withModuleFederationPlugin({
 
-  shared: {
-    ...shareAll({ singleton: true, strictVersion: true, requiredVersion: 'auto' }),
-  },
+  shared: share({
+    '@angular/animations': {singleton: true, strictVersion: true},
+    '@angular/core': {singleton: true, strictVersion: true},
+    '@angular/common': {singleton: true, strictVersion: true},
+    '@angular/forms': {singleton: true, strictVersion: true},
+    '@angular/platform-browser': {singleton: true, strictVersion: true},
+    '@angular/router': {singleton: true, strictVersion: true},
+    rxjs: {singleton: true, strictVersion: true},
+    "ngx-mfe": { singleton: true, strictVersion: true},
+    "projects/utils/src/public-api": { singleton: true, strictVersion: true, requiredVersion: "0.0.1"}
+  })
 
 });

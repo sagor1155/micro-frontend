@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { UtilsService } from 'projects/utils/src/public-api';
 
 @Component({
   selector: 'app-landingpage',
@@ -9,9 +10,12 @@ export class LandingpageComponent implements OnInit {
 
   public text = 'Initial Text!';
 
-  constructor() { }
+  constructor(private utilsSvc: UtilsService) {
+  }
 
   ngOnInit(): void {
+    this.utilsSvc.value = 99;
+    console.log('Host: counter: ', this.utilsSvc.value);
   }
 
   onClick() {

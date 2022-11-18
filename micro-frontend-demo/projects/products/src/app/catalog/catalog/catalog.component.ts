@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { UtilsService } from 'projects/utils/src/public-api';
 
 @Component({
   selector: 'app-catalog',
@@ -10,13 +11,15 @@ export class CatalogComponent implements OnInit {
   @Input() text = '';
   @Output() click: EventEmitter<void> = new EventEmitter();
 
-  constructor() { }
+  constructor(private utilsSvc: UtilsService) {
+  }
 
   ngOnInit(): void {
   }
 
   onButtonClick() {
-    this.click.emit();
+    console.log('MFE: Counter is: ', this.utilsSvc.value);
+    // this.click.emit();
   }
 
 }
