@@ -1,11 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-dashboard-table',
-  templateUrl: './dashboard-table.component.html',
-  styleUrls: ['./dashboard-table.component.css']
+  selector: 'app-dashboard',
+  templateUrl: './dashboard.component.html',
+  styleUrls: ['./dashboard.component.css']
 })
-export class DashboardTableComponent implements OnInit {
+export class DashboardComponent implements OnInit {
 
   @Input() text = '';
 
@@ -18,5 +18,4 @@ export class DashboardTableComponent implements OnInit {
     const customEvent = new CustomEvent('eventFromMfe', {detail: {name: 'IBFD'}})
     window.dispatchEvent(customEvent);
   }
-
 }

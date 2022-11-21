@@ -9,7 +9,7 @@ module.exports = withModuleFederationPlugin({
     '@angular/forms': {singleton: true, strictVersion: true},
     '@angular/platform-browser': {singleton: true, strictVersion: true},
     '@angular/router': {singleton: true, strictVersion: true},
-    rxjs: {singleton: true, strictVersion: true},
+    'rxjs': {singleton: true, strictVersion: true, requiredVersion: false},
     "ngx-mfe": { singleton: true, strictVersion: true},
     "projects/utils/src/public-api": { singleton: true, strictVersion: true, requiredVersion: "0.0.1"}
   })

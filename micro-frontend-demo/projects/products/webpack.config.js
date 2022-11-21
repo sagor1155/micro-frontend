@@ -6,7 +6,7 @@ module.exports = withModuleFederationPlugin({
   filename: 'products.js',
   exposes: {
     DashboardModule: './projects/products/src/app/dashboard/dashboard.module.ts',
-    DashboardTableComponent: './projects/products/src/app/dashboard/dashboard-table/dashboard-table.component.ts',
+    DashboardComponent: './projects/products/src/app/dashboard/dashboard/dashboard.component.ts',
     CatalogModule: './projects/products/src/app/catalog/catalog.module.ts',
     CatalogComponent: './projects/products/src/app/catalog/catalog/catalog.component.ts'
   },
@@ -18,7 +18,7 @@ module.exports = withModuleFederationPlugin({
     '@angular/forms': {singleton: true, strictVersion: true},
     '@angular/platform-browser': {singleton: true, strictVersion: true},
     '@angular/router': {singleton: true, strictVersion: true},
-    rxjs: {singleton: true, strictVersion: true},
+    'rxjs': {singleton: true, strictVersion: true, requiredVersion: false},
     "ngx-mfe": { singleton: true, strictVersion: true},
     "projects/utils/src/public-api": { singleton: true, strictVersion: true, requiredVersion: "0.0.1"}
   })
