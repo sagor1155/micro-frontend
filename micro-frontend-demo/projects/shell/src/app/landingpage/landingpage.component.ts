@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UtilsService } from 'projects/utils/src/public-api';
-import { Subscription } from 'rxjs';
+import { fromEvent, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-landingpage',
@@ -20,6 +20,9 @@ export class LandingpageComponent implements OnInit, OnDestroy {
       console.log('Host: received test event');
       this.text = 'text changed';
     }));
+
+    this.subscription.add(fromEvent<CustomEvent>(window, 'eventFromMfe').subscribe(console.log));
+
   }
 
   ngOnDestroy(): void {

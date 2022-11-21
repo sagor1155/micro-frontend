@@ -14,4 +14,9 @@ export class DashboardTableComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  onButtonClick() {
+    const customEvent = new CustomEvent('eventFromMfe', {detail: {name: 'IBFD'}})
+    window.dispatchEvent(customEvent);
+  }
+
 }
