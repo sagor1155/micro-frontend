@@ -3,7 +3,7 @@ Micro-frontend Demo Project in Angular
 
 ## Topic List
 - Load remote module/component using "webpack module federation"
-- Load remote component from HTML
+- Load remote component from HTML (Plugin based approach)
 - Input/Output binding with remote component using "ngx-mfe"
 - Communication between MFE using CustomEvent
 - Communication between MFE using Shared Service and RxJs
@@ -154,7 +154,7 @@ Micro-frontend Demo Project in Angular
   Here, 
   - Remote module location can be configured in `remotes` section. This references the separately compiled and deployed MFE (`products`) project. But there is an alternative way which is shown in below section.
 
-## Load remote modules/components from Shell
+## Load remote modules/components dynamically from Shell
 - Open the `Shell`'s router config (`app-routing.module.ts`) and add route for loading MFEs
   
   ```ts
@@ -190,12 +190,13 @@ Micro-frontend Demo Project in Angular
 - Open the URL `http://localhost:4200/dashboard/dashboard` in browser. This should load the remote MFE into the shell. 
 
 
-# Load remote component from HTML
-### Ref:
- - https://github.com/dkhrunov/ngx-mfe
- - https://dekh.medium.com/angular-micro-frontend-architecture-part-3-3-mfe-plugin-based-approach-f36dc9849b0
+# Load remote component from HTML (Plugin based approach)
+This approach allows us to load micro-frontends directly from HTML.
+The main advantage of this approach is that, we can display several MFEs at once on the same page.
 
 ## Loading remote component from HTML using "ViewContainerRef"
+In Shell application - 
+
 `landingpage.component.html`
 ```html
 <div #placeHolder></div>
@@ -203,6 +204,12 @@ Micro-frontend Demo Project in Angular
 `landingpage.component.ts`
 ```ts
 @ViewChild('placeHolder', { read: ViewContainerRef }) viewContainerRef!: ViewContainerRef;
+```
+
+```ts
+ngOnInit() {
+  this.loadCatalogComponent();
+}
 ```
 
 ```ts
@@ -217,3 +224,79 @@ async loadCatalogComponent(): Promise<void> {
 ```
 
 ## Loading remote component from HTML using "ngx-mfe"
+The main advantage of using `ngx-mfe` library is that, we can bind input/output with MFE's. It also has support for features like loader, loader delay, fallback etc.  
+### Ref:
+- https://github.com/dkhrunov/ngx-mfe
+- https://dekh.medium.com/angular-micro-frontend-architecture-part-3-3-mfe-plugin-based-approach-f36dc9849b0#339a
+
+### Install 'ngx-mfe' library
+`npm i ngx-mfe`
+
+### Configure library
+Add the `ngx-mfe` library to `shared` property in the `ModuleFederationPlugin` inside `webpack.config.js` file for each application in your workspace.
+
+```js
+module.exports = withModuleFederationPlugin({
+  shared: share({
+    ...
+    "ngx-mfe": { singleton: true, strictVersion: true, requiredVersion: 'auto'}
+  })
+});
+```
+
+In Shell `app.module.ts`, import `MfeModule` with options - 
+```ts
+imports: [
+  ...
+  MfeModule.forRoot({
+    mfeConfig: {
+      "products": "http://localhost:3000/products.js",
+    },
+    loaderDelay: 500
+  })
+],
+```
+
+In MFE `app.module.ts`, import `MfeModule` without options - 
+```ts
+imports: [
+  ...
+  MfeModule
+],
+```
+
+### Conventions
+- To display a standalone MFE component, you only need the component file itself. 
+- To display an MFE component with dependencies in the module where the component was declared, you must expose both the component file and the module file from `ModuleFederationPlugin`.
+- The file key of an exposed Module or Component (declared in the `ModuleFederationPlugin` in the `expose` property) must match the class name of that file.
+- You must follow the rule that only one Component must be declared for an exposed Module. This is known as SCAM (Single Component Angular Module) pattern.
+
+### Load component
+In Shell app `landingpage.component.html` file add this: 
+```html
+<ng-container
+  mfeOutlet="products"
+  mfeOutletModule="CatalogModule"
+  mfeOutletComponent="CatalogComponent"
+  [mfeOutletInputs]="{ text: inputText }"
+  [mfeOutletOutputs]="{ click: onClick }"
+  [mfeOutletLoaderDelay]="500"
+  [mfeOutletLoader]="loaderTpl"
+  [mfeOutletFallback]="fallbackTpl"
+>
+</ng-container>
+
+<ng-template #loaderTpl>
+  <div>loading...</div>
+</ng-template>
+
+<ng-template #fallbackTpl>
+  <div>Ooops! Something went wrong</div>
+</ng-template>
+```
+
+Here:
+- `mfeOutlet` - scope name
+- `mfeOutletModule` - module name (MUST specify if not standalone component)
+- `mfeOutletComponent` - component name
+- other attributes are optional
