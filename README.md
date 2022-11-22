@@ -22,47 +22,50 @@ Micro-frontend Demo Project in Angular
   - ngx-mfe
   - angular/elements
   - nx
-  - elementjs
+  - systemjs
   - single-spa
 - Mono repo vs Separate repo
 - References
 
 
-## Load remote module/component using "webpack module federation"
-Ref - https://github.com/angular-architects/module-federation-plugin/blob/main/libs/mf/tutorial/tutorial.md
-### Project setup
-- #### Create workspace
+# Load remote module/component using "webpack module federation"
+### Ref: 
+- https://github.com/angular-architects/module-federation-plugin/blob/main/libs/mf/tutorial/tutorial.md 
+- https://www.npmjs.com/package/@angular-architects/module-federation
+
+## Project setup
+- ### Create workspace
     `ng n micro-frontend-demo --create-application false`
 
-- #### Go to workspace directory
+- ### Go to workspace directory
     `cd micro-frontend-demo`
 
-- #### Create shell (host) application
+- ### Create shell (host) application
     `ng generate application shell --routing`
 
-- #### Add component into shell (host) application
+- ### Add component into shell (host) application
     `ng g c landingpage --project=shell`
 
-- #### Create MFE application
+- ### Create MFE application
     `ng generate application products --routing`
 
-- #### Add module into MFE application
+- ### Add module into MFE application
     `ng g module dashboard --routing --project=products`
 
     `ng g module catalog --routing --project=products`
 
-- #### Add component into MFE application
+- ### Add component into MFE application
     `ng g c dashboard/dashboard --project=products`
 
     `ng g c catalog/catalog --project=products`
 
-- #### Install and activate module federation library into the Shell
+- ### Install and activate module federation library into the Shell
     `ng add @angular-architects/module-federation --project shell --type host --port 4200`
 
-- #### Install and activate module federation library into the MFE
+- ### Install and activate module federation library into the MFE
     `ng add @angular-architects/module-federation --project products --type remote --port 3000`
 
-### Configure module federation in remote MFE
+## Configure module federation in remote MFE
 - Go to project 'products', open `webpack.config.js` and configure like following
   
   ```js
@@ -98,8 +101,30 @@ Ref - https://github.com/angular-architects/module-federation-plugin/blob/main/l
   - On `exposes` section add the module/component name and path which we want to expose. These modules/components will be available to be loaded remotely from Host or, another MFE. 
   - Libraries added on `shared` section will be shared among Host and MFEs. So, the MFEs bundle will not include these libraries, thus it will reduce the bundle size. 
 
+- Import `DashboardModule` from `app.module.ts`
+  ```ts
+  @NgModule({
+    ...
+    imports: [
+      BrowserModule,
+      AppRoutingModule,
+      DashboardModule
+    ]
+    ...
+  })
+  ```
+- Configure route in `dashboard-routing.module.ts`
+  ```ts
+  const routes: Routes = [
+  {
+    path: 'dashboard',
+    component: DashboardComponent
+  }
+  ];
+  ```
+
   
-### Configure module federation in Host
+## Configure module federation in Host
 - Go to project 'shell', open `webpack.config.js` and configure like following
   
   ```js
@@ -129,11 +154,12 @@ Ref - https://github.com/angular-architects/module-federation-plugin/blob/main/l
   Here, 
   - Remote module location can be configured in `remotes` section. This references the separately compiled and deployed MFE (`products`) project. But there is an alternative way which is shown in below section.
 
-### Load remote modules/components
+## Load remote modules/components from Shell
 - Open the `Shell`'s router config (`app-routing.module.ts`) and add route for loading MFEs
   
   ```ts
   const routes: Routes = [
+  ...
   {
     path: 'dashboard',
     loadChildren: () => loadRemoteModule({
@@ -150,14 +176,44 @@ Ref - https://github.com/angular-architects/module-federation-plugin/blob/main/l
       exposedModule: 'CatalogModule'
     }).then(m => m.CatalogModule)
   }
+  ...
   ];
   ```
 
-### Run the projects
+## Run the projects
 - Run MFE  
   `ng serve products`
 
 - Run Host  
   `ng serve shell`
 
-- Open the URL `http://localhost:4200/dashboard/dashboard` in browser. This should load the MFE into the shell. 
+- Open the URL `http://localhost:4200/dashboard/dashboard` in browser. This should load the remote MFE into the shell. 
+
+
+# Load remote component from HTML
+### Ref:
+ - https://github.com/dkhrunov/ngx-mfe
+ - https://dekh.medium.com/angular-micro-frontend-architecture-part-3-3-mfe-plugin-based-approach-f36dc9849b0
+
+## Loading remote component from HTML using "ViewContainerRef"
+`landingpage.component.html`
+```html
+<div #placeHolder></div>
+```
+`landingpage.component.ts`
+```ts
+@ViewChild('placeHolder', { read: ViewContainerRef }) viewContainerRef!: ViewContainerRef;
+```
+
+```ts
+async loadCatalogComponent(): Promise<void> {
+  const m = await loadRemoteModule(<LoadRemoteModuleEsmOptions>{
+    type: 'module',
+    remoteEntry: 'http://localhost:3000/products.js',
+    exposedModule: 'CatalogModule'
+  });
+  const ref = this.viewContainerRef.createComponent(m.CatalogComponent);
+}
+```
+
+## Loading remote component from HTML using "ngx-mfe"
