@@ -9,8 +9,11 @@
       mfeOutletComponent="CatalogComponent"
       [mfeOutletInputs]="{ text: text }"
       [mfeOutletOutputs]="{ click: onClick }"
+      [mfeOutletLoaderDelay]="1500"
+      [mfeOutletLoader]="loaderTpl"
+      [mfeOutletFallback]="fallbackTpl"
     >
-    </ng-container>  
+    </ng-container>
   </div>
   <div class="mb-2">
     <ng-container
@@ -18,24 +21,14 @@
       mfeOutletModule="DashboardModule"
       mfeOutletComponent="DashboardComponent"
       [mfeOutletInputs]="{ text: text }"
+      [mfeOutletLoaderDelay]="1500"
+      [mfeOutletLoader]="loaderTpl"
+      [mfeOutletFallback]="fallbackTpl"
     >
     </ng-container>
   </div>
 </div>
 </div>
-
-<!-- <ng-container
-  *mfeOutlet="
-    'products';
-    module: 'CatalogModule';
-    component: 'CatalogComponent';
-    loaderDelay: 1500;
-    loader: loaderTpl;
-    fallback: fallbackTpl;
-    inputs: { text: text };
-    outputs: { click: onClick };
-  "
-></ng-container>
 
 <ng-template #loaderTpl>
   <div>loading...</div>
@@ -43,4 +36,4 @@
 
 <ng-template #fallbackTpl>
   <div>Ooops! Something went wrong</div>
-</ng-template> -->
+</ng-template>
