@@ -18,7 +18,7 @@ export class CatalogComponent implements OnInit {
   }
 
   onButtonClick() {
-    // this.click.emit();
+    this.click.emit();
     this.utilsSvc.publistTestEvent(true);
   }
 

@@ -2,31 +2,32 @@
 Micro-frontend Demo Project in Angular
 
 ## Topic List
-- > Load remote module/component using "webpack module federation"
-- > Load remote component from HTML (Plugin based approach)
-- > Input/Output binding with remote component using "ngx-mfe"
-- > Communication between MFE using CustomEvent
-- > Communication between MFE using Shared Service and RxJs
-- MFE using web components (@angular/elements)
-- Load remote MFE from another MFE
-- Sharing code and resources
-  - > library/services
-  - style
-  - config
-  - version mismatch issue
-- Passing Injector to MFE, Why & when do we need this? 
-- Router snapshot/navigate behaviour within Shell (Host) & MFE
-- Route reuse strategy in MFEs
-- Config based remote module loading from Shell
-- Necessary libraries
-  - > Webpack module federation
-  - > ngx-mfe
-  - angular/elements
-  - nx
-  - systemjs
-  - single-spa
-- Mono repo vs Separate repo
-- Deploy MFEs
+- [&check;] Load remote module/component using "webpack module federation"
+- [&check;] Load remote component from HTML (Plugin based approach)
+    - [&check;] Loading remote component from HTML using "ViewContainerRef"
+    - [&check;] Loading remote component from HTML using "ngx-mfe"
+- [&check;] Communication between MFE using CustomEvent
+- [&check;] Communication between MFE using Shared Service and RxJs
+- [&cross;] MFE using web components (@angular/elements)
+- [&cross;] Load remote MFE from another MFE
+- [&cross;] Sharing code and resources
+  - [&check;] library/services
+  - [&cross;] style
+  - [&cross;] config
+  - [&cross;] version mismatch issue
+- [&cross;] Passing Injector to MFE, Why & when do we need this? 
+- [&cross;] Router snapshot/navigate behaviour within Shell (Host) & MFE
+- [&cross;] Route reuse strategy in MFEs
+- [&cross;] Config based remote module loading from Shell
+- [&cross;] Necessary libraries
+  - [&check;] Webpack module federation
+  - [&check;] ngx-mfe
+  - [&cross;] angular/elements
+  - [&cross;] nx
+  - [&cross;] systemjs
+  - [&cross;] single-spa
+- [&cross;] Mono repo vs Separate repo
+- [&cross;] Deploy MFEs
 
 
 # Load remote module/component using "webpack module federation"
@@ -224,8 +225,10 @@ async loadCatalogComponent(): Promise<void> {
 }
 ```
 
+> Binding Input/Output this way is difficult which can be achieved simply by using **ngx-mfe** library
+
 ## Loading remote component from HTML using "ngx-mfe"
-The main advantage of using `ngx-mfe` library is that, we can bind input/output with MFE's. It also has support for features like loader, loader delay, fallback etc.  
+The main advantage of using `ngx-mfe` library is that, we can bind input/output with MFE's. It also has support for features like loader, loader delay, fallback, mfe registry etc.  
 ### Ref:
 - https://github.com/dkhrunov/ngx-mfe
 - https://dekh.medium.com/angular-micro-frontend-architecture-part-3-3-mfe-plugin-based-approach-f36dc9849b0#339a
@@ -272,7 +275,7 @@ imports: [
 - The file key of an exposed Module or Component (declared in the **ModuleFederationPlugin** in the **expose** property) must match the class name of that file.
 - You must follow the rule that only one Component must be declared for an exposed Module. This is known as SCAM (Single Component Angular Module) pattern.
 
-### Load component
+### Load component and Input/Output binding
 In Shell app `landingpage.component.html` file add this: 
 ```html
 <ng-container
@@ -305,4 +308,20 @@ Here:
 - `mfeOutletLoaderDelay` - waits before loading MFE
 - `mfeOutletLoader` - loader template is shown before loading MFE
 - `mfeOutletFallback` - fallback template is shown if MFE loading failed
+
+
+> Note: **ngx-mfe** library has a problem that is the output event handler/callback can't access component members/property. 
+
+Following code will throw an error on console - 
+```ts
+onClick() {
+  this.hostComponentMemberFunction();
+  console.log('Click from MFE');
+}
+```
+
+Error:
+```bash
+ERROR TypeError: Cannot read properties of undefined (reading 'hostComponentMemberFunction')
+```
 

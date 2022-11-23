@@ -12,17 +12,15 @@ export class LandingpageComponent implements OnInit, OnDestroy {
   private subscription: Subscription = new Subscription();
   public text = 'Initial Text!';
 
-  constructor(private utilsSvc: UtilsService) {
-  }
+  constructor(private utilsSvc: UtilsService) {}
 
   ngOnInit(): void {
     this.subscription.add(this.utilsSvc.getTestEvent().subscribe(data => {
-      console.log('Host: received test event');
-      this.text = 'text changed';
+      console.log('Shell: Received Event Notification from MFE');
+      this.text = 'Text changed!';
     }));
 
     this.subscription.add(fromEvent<CustomEvent>(window, 'eventFromMfe').subscribe(console.log));
-
   }
 
   ngOnDestroy(): void {
@@ -32,6 +30,6 @@ export class LandingpageComponent implements OnInit, OnDestroy {
   }
 
   onClick() {
-    console.log('Host: click from remote component');
+    console.log('Shell: Click from MFE');
   }
 }
