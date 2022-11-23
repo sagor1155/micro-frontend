@@ -23,9 +23,9 @@ Micro-frontend Demo Project in Angular
   - [&check;] Webpack module federation
   - [&check;] ngx-mfe
   - [&cross;] angular/elements
-  - [&cross;] nx
-  - [&cross;] systemjs
-  - [&cross;] single-spa
+  - [&cross;] [nx](https://nx.dev/recipes/module-federation/dynamic-module-federation-with-angular)
+  - [&cross;] [systemjs](https://github.com/systemjs/systemjs)
+  - [&cross;] [single-spa](https://single-spa.js.org/docs/microfrontends-concept/)
 - [&cross;] Mono repo vs Separate repo
 - [&cross;] Deploy MFEs
 
@@ -324,4 +324,78 @@ Error:
 ```bash
 ERROR TypeError: Cannot read properties of undefined (reading 'hostComponentMemberFunction')
 ```
+
+# Communication between MFE using CustomEvent
+Create and dispatch **CustomEvent** from MFE (`dashboard.component.ts`)
+```ts
+const customEvent = new CustomEvent('eventFromMfe', {detail: {name: 'IBFD'}})
+window.dispatchEvent(customEvent);
+```
+
+Subscribe to **CustomEvent** from Shell (`landingpage.component.ts`)
+```ts
+this.subscription.add(fromEvent<CustomEvent>(window, 'eventFromMfe').subscribe(console.log));
+```
+
+# Communication between MFE using Shared Service and RxJs
+- Add a library in monorepo
+  
+  `ng g lib utils`
+  
+  It will be created within **projects** directory. 
+
+- It will generate `projects/utils/src/public-api.ts` which looks like following - 
+    ```ts
+    export * from './lib/utils.service';
+    export * from './lib/utils.component';
+    export * from './lib/utils.module';
+    ``` 
+
+- Configure shared library in `webpack.config.js` for both Shell & MFE
+  ```js
+  module.exports = withModuleFederationPlugin({
+    ...
+    shared: share({
+    ...
+    "projects/utils/src/public-api": { singleton: true, strictVersion: true, requiredVersion: 'auto'}
+    })
+  });
+  ```
+
+- In Shell app, import `UtilsModule` from `app.module.ts`
+  ```ts
+  imports: [
+    ...
+    UtilsModule
+  ],
+  ```
+- In MFE app, import `UtilsModule` from `app.module.ts`
+  ```ts
+  imports: [
+    ...
+    UtilsModule
+  ],
+  ```
+- Use shared singleton service in MFE
+  ```ts
+  import { UtilsService } from 'projects/utils/src/public-api';
+  ```  
+  ```ts
+    constructor(private utilsService: UtilsService) {}
+  ```
+  ```ts
+    this.utilsService.publistTestEvent(true);
+  ```
+- Use shared singleton service in Shell
+  ```ts
+  import { UtilsService } from 'projects/utils/src/public-api';
+  ```
+  ```ts
+  constructor(private utilsService: UtilsService) {}
+  ```
+  ```ts
+  this.subscription.add(this.utilsService.getTestEvent().subscribe(data => {
+    console.log('Shell: Received Event Notification from MFE');
+  }));
+  ```
 
