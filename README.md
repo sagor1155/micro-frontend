@@ -2,30 +2,31 @@
 Micro-frontend Demo Project in Angular
 
 ## Topic List
-- Load remote module/component using "webpack module federation"
-- Load remote component from HTML (Plugin based approach)
-- Input/Output binding with remote component using "ngx-mfe"
-- Communication between MFE using CustomEvent
-- Communication between MFE using Shared Service and RxJs
+- > Load remote module/component using "webpack module federation"
+- > Load remote component from HTML (Plugin based approach)
+- > Input/Output binding with remote component using "ngx-mfe"
+- > Communication between MFE using CustomEvent
+- > Communication between MFE using Shared Service and RxJs
 - MFE using web components (@angular/elements)
 - Load remote MFE from another MFE
 - Sharing code and resources
-  - library/services
+  - > library/services
   - style
   - config
   - version mismatch issue
 - Passing Injector to MFE, Why & when do we need this? 
 - Router snapshot/navigate behaviour within Shell (Host) & MFE
+- Route reuse strategy in MFEs
 - Config based remote module loading from Shell
 - Necessary libraries
-  - Webpack module federation
-  - ngx-mfe
+  - > Webpack module federation
+  - > ngx-mfe
   - angular/elements
   - nx
   - systemjs
   - single-spa
 - Mono repo vs Separate repo
-- References
+- Deploy MFEs
 
 
 # Load remote module/component using "webpack module federation"
@@ -66,7 +67,7 @@ Micro-frontend Demo Project in Angular
     `ng add @angular-architects/module-federation --project products --type remote --port 3000`
 
 ## Configure module federation in remote MFE
-- Go to project 'products', open `webpack.config.js` and configure like following
+- Go to project **products**, open `webpack.config.js` and configure like following
   
   ```js
   const { 
@@ -267,8 +268,8 @@ imports: [
 
 ### Conventions
 - To display a standalone MFE component, you only need the component file itself. 
-- To display an MFE component with dependencies in the module where the component was declared, you must expose both the component file and the module file from `ModuleFederationPlugin`.
-- The file key of an exposed Module or Component (declared in the `ModuleFederationPlugin` in the `expose` property) must match the class name of that file.
+- To display an MFE component with dependencies in the module where the component was declared, you must expose both the component file and the module file from **ModuleFederationPlugin**.
+- The file key of an exposed Module or Component (declared in the **ModuleFederationPlugin** in the **expose** property) must match the class name of that file.
 - You must follow the rule that only one Component must be declared for an exposed Module. This is known as SCAM (Single Component Angular Module) pattern.
 
 ### Load component
@@ -299,4 +300,9 @@ Here:
 - `mfeOutlet` - scope name
 - `mfeOutletModule` - module name (MUST specify if not standalone component)
 - `mfeOutletComponent` - component name
-- other attributes are optional
+- `mfeOutletInputs` - property binding
+- `mfeOutletOutputs` - event binding
+- `mfeOutletLoaderDelay` - waits before loading MFE
+- `mfeOutletLoader` - loader template is shown before loading MFE
+- `mfeOutletFallback` - fallback template is shown if MFE loading failed
+
