@@ -6,8 +6,8 @@ Micro-frontend Demo Project in Angular
 - [&check;] Load remote component from HTML (Plugin based approach)
     - [&check;] Loading remote component from HTML using "ViewContainerRef"
     - [&check;] Loading remote component from HTML using "ngx-mfe"
-- [&check;] Communication between MFE using CustomEvent
-- [&check;] Communication between MFE using Shared Service and RxJs
+- [&check;] Communication between MFEs using CustomEvent
+- [&check;] Communication between MFEs using Shared Service and RxJs
 - [&cross;] MFE using web components (@angular/elements)
 - [&cross;] Load remote MFE from another MFE
 - [&cross;] Sharing code and resources
@@ -325,7 +325,7 @@ Error:
 ERROR TypeError: Cannot read properties of undefined (reading 'hostComponentMemberFunction')
 ```
 
-# Communication between MFE using CustomEvent
+# Communication between MFEs using CustomEvent
 Create and dispatch **CustomEvent** from MFE (`dashboard.component.ts`)
 ```ts
 const customEvent = new CustomEvent('eventFromMfe', {detail: {name: 'IBFD'}})
@@ -337,7 +337,8 @@ Subscribe to **CustomEvent** from Shell (`landingpage.component.ts`)
 this.subscription.add(fromEvent<CustomEvent>(window, 'eventFromMfe').subscribe(console.log));
 ```
 
-# Communication between MFE using Shared Service and RxJs
+# Communication between MFEs using Shared Service and RxJs
+
 - Add a library in monorepo
   
   `ng g lib utils`
@@ -398,4 +399,18 @@ this.subscription.add(fromEvent<CustomEvent>(window, 'eventFromMfe').subscribe(c
     console.log('Shell: Received Event Notification from MFE');
   }));
   ```
+### Ref:
+- https://github.com/angular-architects/module-federation-plugin/blob/main/libs/mf/tutorial/tutorial.md#step-5-communication-between-micro-frontends-and-sharing-monorepo-libraries
 
+
+# MFE using web components (@angular/elements)
+Angular elements are Angular components packaged as custom elements (also called Web Components), a web standard for defining new HTML elements in a framework-agnostic way.
+
+- Install **@angular/elements**  
+  `npm i @angular/elements`
+- 
+
+
+### Ref:
+- https://angular.io/guide/elements
+- https://www.youtube.com/watch?v=A0JAZhyYXGA&t=238s
