@@ -16,6 +16,7 @@ import { LandingpageComponent } from './landingpage/landingpage.component';
     MfeModule.forRoot({
       mfeConfig: {
         "products": "http://localhost:3000/products.js",
+        "mfe2": "http://localhost:3300/remoteEntry.js",
       },
     }),
     BrowserModule,

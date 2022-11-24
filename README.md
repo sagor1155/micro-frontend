@@ -20,13 +20,15 @@ Micro-frontend Demo Project in Angular
 - [&cross;] Route reuse strategy in MFEs
 - [&cross;] Config based remote module loading from Shell
 - [&cross;] Necessary libraries
-  - [&check;] Webpack module federation
-  - [&check;] ngx-mfe
-  - [&cross;] angular/elements
+  - [&check;] [module-federation](https://www.npmjs.com/package/@angular-architects/module-federation)
+  - [&cross;] [module-federation-tools](https://www.npmjs.com/package/@angular-architects/module-federation-tools)
+  - [&check;] [ngx-mfe](https://socket.dev/npm/package/ngx-mfe)
+  - [&cross;] [angular/elements](https://www.npmjs.com/package/@angular/elements)
   - [&cross;] [nx](https://nx.dev/recipes/module-federation/dynamic-module-federation-with-angular)
   - [&cross;] [systemjs](https://github.com/systemjs/systemjs)
   - [&cross;] [single-spa](https://single-spa.js.org/docs/microfrontends-concept/)
 - [&cross;] Mono repo vs Separate repo
+- [&cross;] Analyze bundle size
 - [&cross;] Deploy MFEs
 
 
@@ -407,10 +409,18 @@ this.subscription.add(fromEvent<CustomEvent>(window, 'eventFromMfe').subscribe(c
 Angular elements are Angular components packaged as custom elements (also called Web Components), a web standard for defining new HTML elements in a framework-agnostic way.
 
 - Install **@angular/elements**  
-  `npm i @angular/elements`
-- 
 
+  `npm i @angular/elements`
+
+- Install @angular-architects/module-federation-tools
+
+  `npm i @angular-architects/module-federation-tools`
+
+- 
 
 ### Ref:
 - https://angular.io/guide/elements
 - https://www.youtube.com/watch?v=A0JAZhyYXGA&t=238s
+- https://www.npmjs.com/package/@angular-architects/module-federation-tools
+- https://github.com/angular-architects/module-federation-plugin/blob/main/libs/mf-tools/tutorial/index.md
+- https://www.angulararchitects.io/aktuelles/multi-framework-and-version-micro-frontends-with-module-federation-the-good-the-bad-the-ugly/
