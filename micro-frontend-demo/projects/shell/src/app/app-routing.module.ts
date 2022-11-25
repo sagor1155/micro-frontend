@@ -3,6 +3,7 @@ import { WebComponentWrapper, WebComponentWrapperOptions } from '@angular-archit
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LandingpageComponent } from './landingpage/landingpage.component';
+import { WrapperComponent } from './wrapper/wrapper.component';
 
 const routes: Routes = [
   {
@@ -26,15 +27,28 @@ const routes: Routes = [
       exposedModule: 'CatalogModule'
     }).then(m => m.CatalogModule)
   },
+  // {
+  //   path: 'mfe2',
+  //   component: WebComponentWrapper,
+  //   data: {
+  //     remoteEntry: 'http://localhost:3300/remoteEntry.js',
+  //     remoteName: 'mfe2',
+  //     exposedModule: './web-components',
+  //     elementName: 'mfe2-element'
+  //   } as WebComponentWrapperOptions
+  // },
   {
     path: 'mfe2',
-    component: WebComponentWrapper,
+    component: WrapperComponent,
     data: {
-      remoteEntry: 'http://localhost:3300/remoteEntry.js',
-      remoteName: 'mfe2',
-      exposedModule: './web-components',
-      elementName: 'mfe2-element'
-    } as WebComponentWrapperOptions
+      importName: 'mfe2',
+      elementName: 'mfe2-element',
+      load: () => loadRemoteModule({
+        type: 'module',
+        remoteEntry: 'http://localhost:3300/remoteEntry.js',
+        exposedModule: './web-components'
+      })
+    }
   },
   {
     path: '**',

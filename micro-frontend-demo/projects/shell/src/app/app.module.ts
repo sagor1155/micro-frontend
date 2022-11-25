@@ -6,11 +6,13 @@ import { UtilsModule } from 'projects/utils/src/public-api';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LandingpageComponent } from './landingpage/landingpage.component';
+import { WrapperComponent } from './wrapper/wrapper.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    LandingpageComponent
+    LandingpageComponent,
+    WrapperComponent
   ],
   imports: [
     MfeModule.forRoot({
