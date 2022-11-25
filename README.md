@@ -312,7 +312,7 @@ Here:
 - `mfeOutletFallback` - fallback template is shown if MFE loading failed
 
 
-> Note: **ngx-mfe** library has a problem that is the output event handler/callback can't access component members/property. 
+> Note: There is a problem that is the output event handler/callback can't access component members/property through a regular function. 
 
 Following code will throw an error on console - 
 ```ts
@@ -325,6 +325,14 @@ onClick() {
 Error:
 ```bash
 ERROR TypeError: Cannot read properties of undefined (reading 'hostComponentMemberFunction')
+```
+
+Solution: Use arrow function instead of regular function
+```ts
+onClick = () => {
+  this.hostComponentMemberFunction();
+  console.log('Click from MFE');
+}
 ```
 
 # Communication between MFEs using CustomEvent
@@ -412,7 +420,7 @@ Angular elements are Angular components packaged as custom elements (also called
 
   `npm i @angular/elements`
 
-- Install @angular-architects/module-federation-tools
+- Install **@angular-architects/module-federation-tools**
 
   `npm i @angular-architects/module-federation-tools`
 

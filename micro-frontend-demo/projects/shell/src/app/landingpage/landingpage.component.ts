@@ -17,7 +17,6 @@ export class LandingpageComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.subscription.add(this.utilsSvc.getTestEvent().subscribe(data => {
       console.log('Shell: Received Event Notification from MFE');
-      this.text = 'Text changed!';
     }));
 
     this.subscription.add(fromEvent<CustomEvent>(window, 'eventFromMfe').subscribe(console.log));
@@ -29,7 +28,8 @@ export class LandingpageComponent implements OnInit, OnDestroy {
     }
   }
 
-  onClick() {
+  onClick = () => {
+    this.text = 'Hola!';
     console.log('Shell: Click from MFE');
   }
 }
