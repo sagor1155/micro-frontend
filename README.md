@@ -3,6 +3,8 @@ Micro-frontend Demo Project in Angular
 
 ## Topic List
 - [&check;] Load remote module/component using "webpack module federation"
+    - [&check;] Static Federation
+    - [&check;] Dynamic Federation
 - [&check;] Load remote component from HTML (Plugin based approach)
     - [&check;] Loading remote component from HTML using "ViewContainerRef"
     - [&check;] Loading remote component from HTML using "ngx-mfe"
@@ -27,7 +29,7 @@ Micro-frontend Demo Project in Angular
   - [&cross;] [nx](https://nx.dev/recipes/module-federation/dynamic-module-federation-with-angular)
   - [&cross;] [systemjs](https://github.com/systemjs/systemjs)
   - [&cross;] [single-spa](https://single-spa.js.org/docs/microfrontends-concept/)
-- [&cross;] Mono repo vs Separate repo
+- [&cross;] Mono repos vs. Multiple repos
 - [&cross;] Analyze bundle size
 - [&cross;] Deploy MFEs
 
@@ -69,7 +71,10 @@ Micro-frontend Demo Project in Angular
 - ### Install and activate module federation library into the MFE
     `ng add @angular-architects/module-federation --project products --type remote --port 3000`
 
-## Configure module federation in remote MFE
+## Static Federation
+Remote module will be loaded at the beginning. 
+
+### Configure module federation in remote MFE
 - Go to project **products**, open `webpack.config.js` and configure like following
   
   ```js
@@ -82,10 +87,7 @@ Micro-frontend Demo Project in Angular
     name: 'products',
     filename: 'products.js',
     exposes: {
-        DashboardModule: './projects/products/src/app/dashboard/dashboard.module.ts',
-        DashboardComponent: './projects/products/src/app/dashboard/dashboard/dashboard.component.ts',
-        CatalogModule: './projects/products/src/app/catalog/catalog.module.ts',
-        CatalogComponent: './projects/products/src/app/catalog/catalog/catalog.component.ts'
+      './DashboardModule': './projects/products/src/app/dashboard/dashboard.module.ts'
     },
     shared: share({
         '@angular/animations': {singleton: true, strictVersion: true},
@@ -128,7 +130,7 @@ Micro-frontend Demo Project in Angular
   ```
 
   
-## Configure module federation in Host
+### Configure module federation in Host
 - Go to project 'shell', open `webpack.config.js` and configure like following
   
   ```js
@@ -138,11 +140,9 @@ Micro-frontend Demo Project in Angular
   } = require('@angular-architects/module-federation/webpack');
 
   module.exports = withModuleFederationPlugin({
-    /*
     remotes: {
-      products: 'http://localhost:3000/products.js',
+      'products': 'http://localhost:3000/products.js',
     },
-    */
     shared: share({
         '@angular/animations': {singleton: true, strictVersion: true},
         '@angular/core': {singleton: true, strictVersion: true},
@@ -156,9 +156,83 @@ Micro-frontend Demo Project in Angular
   ```
 
   Here, 
-  - Remote module location can be configured in `remotes` section. This references the separately compiled and deployed MFE (`products`) project. But there is an alternative way which is shown in below section.
+  - Remote module location can be configured in `remotes` section. This references the separately compiled and deployed MFE (`products`) project. 
 
-## Load remote modules/components dynamically from Shell
+### Load remote modules/components from Shell
+- Open the `Shell`'s router config (`app-routing.module.ts`) and add route for loading MFEs
+  
+  ```ts
+  const routes: Routes = [
+  ...
+  {
+    path: 'dashboard',
+    loadChildren: () => import('products/DashboardModule').then(m => m.DashboardModule)
+  }
+  ...
+  ];
+  ```
+
+- As the URL **products/DashboardModule** does not exist at compile time, ease the         TypeScript compiler by adding the following line to the file **projects\shell\src\decl.d.ts**:
+
+    ```ts
+    declare module 'products/DashboardModule';
+    ```
+
+## Dynamic Federation
+Remote module will be loaded when routed to. 
+### Configure module federation in remote MFE
+- Go to project **products**, open `webpack.config.js` and configure like following
+  
+  ```js
+  const { 
+    withModuleFederationPlugin,
+    share 
+  } = require('@angular-architects/module-federation/webpack');
+
+  module.exports = withModuleFederationPlugin({
+    name: 'products',
+    filename: 'products.js',
+    exposes: {
+        DashboardModule: './projects/products/src/app/dashboard/dashboard.module.ts',
+        DashboardComponent: './projects/products/src/app/dashboard/dashboard/dashboard.component.ts',
+        CatalogModule: './projects/products/src/app/catalog/catalog.module.ts',
+        CatalogComponent: './projects/products/src/app/catalog/catalog/catalog.component.ts'
+    },
+    shared: share({
+        '@angular/animations': {singleton: true, strictVersion: true},
+        '@angular/core': {singleton: true, strictVersion: true},
+        '@angular/common': {singleton: true, strictVersion: true},
+        '@angular/forms': {singleton: true, strictVersion: true},
+        '@angular/platform-browser': {singleton: true, strictVersion: true},
+        '@angular/router': {singleton: true, strictVersion: true},
+        'rxjs': {singleton: true, strictVersion: true, requiredVersion: false}
+    })
+  });
+  ```
+  
+### Configure module federation in Host
+- Go to project 'shell', open `webpack.config.js` and configure like following
+  
+  ```js
+  const { 
+    withModuleFederationPlugin,
+    share 
+  } = require('@angular-architects/module-federation/webpack');
+
+  module.exports = withModuleFederationPlugin({
+    shared: share({
+        '@angular/animations': {singleton: true, strictVersion: true},
+        '@angular/core': {singleton: true, strictVersion: true},
+        '@angular/common': {singleton: true, strictVersion: true},
+        '@angular/forms': {singleton: true, strictVersion: true},
+        '@angular/platform-browser': {singleton: true, strictVersion: true},
+        '@angular/router': {singleton: true, strictVersion: true},
+        'rxjs': {singleton: true, strictVersion: true, requiredVersion: false}
+    })
+  });
+  ```
+
+### Load remote modules/components from Shell
 - Open the `Shell`'s router config (`app-routing.module.ts`) and add route for loading MFEs
   
   ```ts
@@ -432,3 +506,4 @@ Angular elements are Angular components packaged as custom elements (also called
 - https://www.npmjs.com/package/@angular-architects/module-federation-tools
 - https://github.com/angular-architects/module-federation-plugin/blob/main/libs/mf-tools/tutorial/index.md
 - https://www.angulararchitects.io/aktuelles/multi-framework-and-version-micro-frontends-with-module-federation-the-good-the-bad-the-ugly/
+- https://github.com/manfredsteyer/multi-framework-micro-frontend
